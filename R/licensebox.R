@@ -12,6 +12,7 @@ licensebox_client <- function(product,keys,version="",server=NULL,directory=NULL
 licensebox_close <- function(client) invisible(.Call("lbR_close",client$pointer,PACKAGE="licensebox"))
 .call <- function(c,op,args=list()) .unwrap(.Call("lbR_call",c$pointer,op,if(length(args)) .json(args) else "{}",PACKAGE="licensebox"))
 licensebox_lease <- function(c) .call(c,"lease")
+licensebox_heartbeat <- function(c,module) .call(c,"heartbeat",list(module=module))
 licensebox_require <- function(c,module) .call(c,"require",list(module=module))
 licensebox_status <- function(c) .call(c,"status")
 licensebox_sign_in <- function(c,timeout=0) .call(c,"sign_in",list(timeout=timeout))
