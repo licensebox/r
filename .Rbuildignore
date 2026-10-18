@@ -1,0 +1,8 @@
+^\.toolchain$
+^build$
+^make\.py$
+^ci$
+^\.github$
+^AGENTS\.md$
+^protocol-lock\.json$
+^native-version\.txt$
