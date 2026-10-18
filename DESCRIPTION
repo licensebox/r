@@ -1,7 +1,7 @@
 Package: licensebox
 Type: Package
 Title: Licensebox Application Licensing
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person("Vijai", "Kumar", role=c("aut", "cre"), email="vijai@meshing.engineer")
 Description: Native application licensing, activation, offline access and usage through the Licensebox C core. Identity and Ed25519 verification remain in the native core.
 License: MIT + file LICENSE
