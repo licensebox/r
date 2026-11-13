@@ -1,10 +1,10 @@
 .json <- function(x) as.character(jsonlite::toJSON(x, auto_unbox=TRUE, null="null", force=TRUE))
 .error <- function(code) stop(structure(list(message=paste("licensebox:",code),call=NULL,code=code),class=c("licensebox_error","error","condition")))
 .unwrap <- function(x,decode=TRUE) {if(!is.null(x[[2]])) .error(x[[2]]);if(decode)jsonlite::fromJSON(x[[1]],simplifyVector=FALSE) else x[[1]]}
-licensebox_client <- function(product,keys,version="",server=NULL,directory=NULL,ca_bundle=NULL,on_sign_in=NULL,clock=NULL,machine_binding=NULL,cancelled=NULL) {
+licensebox_client <- function(product,keys,version="",server=NULL,directory=NULL,ca_bundle=NULL,on_sign_in=NULL,clock=NULL,machine_binding=NULL,cancelled=NULL,enrol_token=NULL) {
  callbacks <- list(on_sign_in,clock,machine_binding,cancelled)
  if(any(!vapply(callbacks,function(f)is.null(f)||is.function(f),logical(1))))stop("callbacks must be functions")
- opts <- Filter(Negate(is.null),list(product=product,keys=structure(keys,names=names(keys)),version=version,server=server,directory=directory,ca_bundle=ca_bundle))
+ opts <- Filter(Negate(is.null),list(product=product,keys=structure(keys,names=names(keys)),version=version,server=server,directory=directory,ca_bundle=ca_bundle,enrol_token=enrol_token))
  p <- .Call("lbR_create",.json(opts),callbacks,PACKAGE="licensebox")
  if(is.list(p)) .unwrap(p)
  structure(list(pointer=p),class="licensebox_client")
@@ -21,6 +21,11 @@ licensebox_modules <- function(c) .call(c,"modules")
 licensebox_requests <- function(c) .call(c,"requests")
 licensebox_request_access <- function(c,modules,note="") .call(c,"request",list(modules=I(modules),note=note))
 licensebox_access_link <- function(c) .call(c,"access-link")
+# Service accounts and floating copies: licensebox_require checks a floating
+# module out by itself; enrol_token (else LICENSEBOX_ENROL_TOKEN) enrols.
+licensebox_enrol <- function(c,token) .call(c,"enrol",list(token=token))
+licensebox_checkout <- function(c,module) .call(c,"checkout",list(module=module))
+licensebox_checkin <- function(c,modules=character()) .call(c,"checkin",list(modules=I(modules)))
 licensebox_record <- function(c,command,success,elapsed) .call(c,"record",list(command=command,success=success,elapsed=elapsed))
 licensebox_derive_binding <- function(product,source,raw_id) .unwrap(.Call("lbR_derive",product,source,raw_id,PACKAGE="licensebox"),FALSE)
 licensebox_native_binding <- function(product) .unwrap(.Call("lbR_native",product,PACKAGE="licensebox"),FALSE)
